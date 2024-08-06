@@ -1,4 +1,4 @@
-package link.yauritux.corebanking.service.dto;
+package link.yauritux.corebanking.service.dto.request;
 
 import lombok.Data;
 

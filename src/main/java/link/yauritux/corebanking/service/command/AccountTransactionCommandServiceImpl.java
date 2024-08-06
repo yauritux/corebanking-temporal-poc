@@ -4,7 +4,8 @@ import io.temporal.api.common.v1.WorkflowExecution;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
-import link.yauritux.corebanking.service.dto.TransferDetails;
+import link.yauritux.corebanking.service.dto.request.TransferDetails;
+import link.yauritux.corebanking.service.dto.response.MoneyTransferResponse;
 import link.yauritux.corebanking.service.workflow.MoneyTransferWorkflow;
 import link.yauritux.corebanking.shared.constants.Config;
 import link.yauritux.corebanking.shared.exceptions.BadRequestException;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class AccountTransactionCommandServiceImpl implements AccountTransactionCommandService {
 
     @Override
-    public UUID doTransfer(TransferDetails transferDetails) throws BadRequestException {
+    public MoneyTransferResponse doTransfer(TransferDetails transferDetails) throws BadRequestException {
         if (!StringUtils.hasText(transferDetails.getSourceAccountId())) {
             throw new BadRequestException("Source account id is required");
         }
@@ -68,6 +69,12 @@ public class AccountTransactionCommandServiceImpl implements AccountTransactionC
         System.out.printf("[WorkflowID: %s]\n[RunID: %s]\n[Transaction Reference: %s]\n\n",
                 we.getWorkflowId(), we.getRunId(),
                 transferDetails.getTransactionReferenceId());
-        return transferDetails.getTransactionReferenceId();
+        return new MoneyTransferResponse(we.getWorkflowId(), we.getRunId(),
+                transferDetails.getTransactionReferenceId().toString(),
+                String.format("Initiating transfer of %.2f from [Account %s] to [Account %s].",
+                        transferDetails.getAmountToTransfer(),
+                        transferDetails.getSourceAccountId(),
+                        transferDetails.getTargetAccountId()));
+//        return transferDetails.getTransactionReferenceId();
     }
 }

@@ -4,7 +4,7 @@ import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
 import io.temporal.workflow.Workflow;
 import link.yauritux.corebanking.service.activity.AccountActivity;
-import link.yauritux.corebanking.service.dto.TransferDetails;
+import link.yauritux.corebanking.service.dto.request.TransferDetails;
 import link.yauritux.corebanking.shared.exceptions.BadRequestException;
 
 import java.time.Duration;

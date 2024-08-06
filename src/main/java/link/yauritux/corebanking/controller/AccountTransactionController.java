@@ -1,15 +1,14 @@
 package link.yauritux.corebanking.controller;
 
+import link.yauritux.corebanking.model.CustomerAccount;
 import link.yauritux.corebanking.service.command.AccountTransactionCommandService;
-import link.yauritux.corebanking.service.dto.TransferDetails;
-import link.yauritux.corebanking.shared.exceptions.BadRequestException;
+import link.yauritux.corebanking.service.dto.request.TransferDetails;
+import link.yauritux.corebanking.service.dto.response.MoneyTransferResponse;
+import link.yauritux.corebanking.service.query.AccountQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -23,11 +22,18 @@ import java.util.UUID;
 public class AccountTransactionController {
 
     private final AccountTransactionCommandService accountTransactionCommandService;
+    private final AccountQueryService accountQueryService;
 
     @PostMapping("/transfer")
-    public ResponseEntity<String> transferMoney(@RequestBody TransferDetails request) {
+    public ResponseEntity<MoneyTransferResponse> transferMoney(@RequestBody TransferDetails request) {
         request.setTransactionReferenceId(UUID.randomUUID());
-        String transactionRefId = accountTransactionCommandService.doTransfer(request).toString();
-        return ResponseEntity.status(HttpStatus.CREATED).body(transactionRefId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                accountTransactionCommandService.doTransfer(request)
+        );
+    }
+
+    @GetMapping("/{accountId}")
+    public ResponseEntity<CustomerAccount> getAccount(@PathVariable String accountId) {
+        return ResponseEntity.status(HttpStatus.OK).body(accountQueryService.getCustomerAccount(accountId));
     }
 }

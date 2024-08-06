@@ -1,6 +1,7 @@
 package link.yauritux.corebanking.service.command;
 
-import link.yauritux.corebanking.service.dto.TransferDetails;
+import link.yauritux.corebanking.service.dto.request.TransferDetails;
+import link.yauritux.corebanking.service.dto.response.MoneyTransferResponse;
 import link.yauritux.corebanking.shared.exceptions.BadRequestException;
 
 import java.util.UUID;
@@ -11,5 +12,5 @@ import java.util.UUID;
  */
 public interface AccountTransactionCommandService {
 
-    UUID doTransfer(TransferDetails transferDetails) throws BadRequestException;
+    MoneyTransferResponse doTransfer(TransferDetails transferDetails) throws BadRequestException;
 }
